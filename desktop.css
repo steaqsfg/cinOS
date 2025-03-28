@@ -1,0 +1,334 @@
+/* New File: desktop.css - Styles for desktop icons and context menu */
+
+.desktop-icon {
+    z-index: var(--desktop-icon-z-index); /* Use variable from style.css */
+    position: absolute;
+    width: 80px; /* Fixed width for grid */
+    /* Adjusted height to better fit content */
+    height: 80px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5px;
+    box-sizing: border-box; /* Ensure padding is included in width/height */
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    user-select: none;
+    transition: background-color var(--transition-speed-fast) ease,
+                border-color var(--transition-speed-fast) ease,
+                box-shadow var(--transition-speed-fast) ease,
+                transform var(--transition-speed-fast) ease;
+    text-align: center;
+    border: 1px solid transparent; /* For selection border */
+}
+
+.desktop-icon:hover {
+    background-color: rgba(0, 122, 255, 0.1); /* Subtle hover */
+}
+
+.desktop-icon.selected {
+    background-color: rgba(0, 122, 255, 0.2); /* Selection highlight */
+    border: 1px solid rgba(0, 122, 255, 0.4);
+}
+
+/* Highlight folder when dragging an item over it */
+.desktop-icon.drop-target-folder {
+    background-color: rgba(0, 122, 255, 0.15);
+    border-color: rgba(0, 122, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.desktop-icon .icon-image {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Clicks should go to the main div */
+}
+
+.desktop-icon .icon-image svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.desktop-icon .icon-label {
+    font-size: 0.75em; /* 12px */
+    color: var(--text-color);
+    background-color: transparent;
+    border: none;
+    padding: 0 2px; /* Reduced padding slightly */
+    border-radius: 3px;
+    width: 100%;
+    max-height: 2.6em; /* Allow ~2 lines (adjusted line-height) */
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    pointer-events: none; /* Allow clicks to pass through unless editing */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); /* Subtle readability shadow */
+}
+
+.desktop-icon.selected .icon-label {
+    /* Optionally change label style when selected */
+    /* background-color: var(--primary-color);
+    color: white; */
+}
+
+.desktop-icon .icon-label[contenteditable="true"] {
+    background-color: rgba(255, 255, 255, 0.9);
+    outline: 1px solid var(--primary-color);
+    pointer-events: auto; /* Enable interaction while editing */
+    overflow: visible;
+    display: block; /* Override -webkit-box */
+    -webkit-line-clamp: unset;
+    text-shadow: none;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    /* Ensure editing label takes full width needed */
+    width: calc(100% - 4px); /* Adjust based on padding */
+    position: relative;
+    z-index: 1; /* Ensure it overlaps icon image if needed */
+}
+
+.desktop-icon.dragging {
+    opacity: 0.5;
+    z-index: var(--window-dragging-z-index) !important; /* Use highest dragging z-index */
+}
+
+
+/* --- Context Menu --- */
+.context-menu {
+    position: absolute;
+    background-color: var(--secondary-color);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 5px 15px var(--shadow-strong-color);
+    padding: 6px;
+    list-style: none;
+    margin: 0;
+    min-width: 180px;
+    z-index: 10000; /* Above everything */
+    display: none; /* Hidden initially */
+    opacity: 0;
+    transform: scale(0.95);
+    transform-origin: top left;
+    transition: opacity var(--transition-speed-fast) ease-out, transform var(--transition-speed-fast) cubic-bezier(0.215, 0.610, 0.355, 1);
+    user-select: none;
+}
+
+.context-menu li {
+    padding: 6px 12px;
+    margin: 2px 0;
+    border-radius: 5px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background-color var(--transition-speed-fast) ease, color var(--transition-speed-fast) ease;
+    position: relative; /* For submenu positioning */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.context-menu li:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+/* Prevent submenu itself from turning blue when parent is hovered */
+.context-menu li.has-submenu:hover > .submenu {
+    background-color: var(--secondary-color); /* Use the base menu background */
+    color: var(--text-color); /* Reset text color for submenu items */
+}
+/* Ensure submenu items highlight correctly on their own hover */
+.context-menu .submenu li:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.context-menu li.separator {
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 5px 0;
+    padding: 0;
+    cursor: default;
+}
+.context-menu li.separator:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Don't highlight separators */
+}
+
+/* Submenu */
+.context-menu li.has-submenu::after {
+    content: '▶'; /* Right arrow */
+    font-size: 0.8em;
+    margin-left: 10px;
+    opacity: 0.6;
+}
+
+.context-menu li.has-submenu:hover::after {
+    opacity: 1;
+}
+
+.context-menu .submenu {
+    position: absolute;
+    left: 100%;
+    top: -7px; /* Align top edge with parent li padding */
+    display: none; /* Hidden by default */
+    background-color: inherit; /* Inherit blur/color */
+    backdrop-filter: inherit;
+    -webkit-backdrop-filter: inherit;
+    border-radius: inherit;
+    box-shadow: inherit;
+    padding: inherit;
+    list-style: none;
+    margin: 0;
+    min-width: 150px;
+    z-index: 1; /* Above parent menu */
+    opacity: 0;
+    transform: translateX(5px);
+    transition: opacity var(--transition-speed-fast) ease-out, transform var(--transition-speed-fast) ease-out;
+}
+
+.context-menu li.has-submenu:hover > .submenu {
+    display: block; /* Show on hover */
+    opacity: 1;
+    transform: translateX(0);
+    /* Background override moved above */
+}
+
+.context-menu .submenu li {
+    /* Inherit styles, no specific changes needed for now */
+    color: var(--text-color); /* Ensure default text color */
+}
+
+
+/* Text Editor Specific Styles */
+.text-editor-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 !important; /* Override default content padding */
+    background-color: #fff; /* Plain white background */
+    border-radius: 0 0 var(--border-radius) var(--border-radius); /* Match window */
+}
+
+.editor-area {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+    resize: none;
+    background: transparent;
+    color: var(--text-color);
+    width: 100%; /* Ensure it fills container */
+    box-sizing: border-box;
+}
+
+.editor-statusbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 0.75em;
+    color: var(--text-color-secondary);
+    background-color: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.save-button {
+    padding: 3px 8px;
+    font-size: 0.9em;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed-fast) ease;
+}
+
+.save-button:hover {
+    background-color: rgb(0, 100, 210);
+}
+
+/* Properties Window Specific Styles */
+.properties-content {
+     padding: 15px; /* Use standard padding */
+}
+
+.properties-content h3 {
+    margin-top: 0;
+    color: var(--text-color);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.properties-content p {
+    margin: 8px 0;
+    font-size: 0.9em;
+}
+
+.properties-content strong {
+    display: inline-block;
+    width: 80px; /* Align labels */
+    color: var(--text-color-secondary);
+}
+
+/* --- Selection Box --- */
+#selection-box {
+    position: absolute;
+    border: 1px solid var(--primary-color);
+    background-color: rgba(0, 122, 255, 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 999; /* Below icons being dragged, above static icons */
+    pointer-events: none; /* Doesn't interfere with mouse events */
+    display: none; /* Hidden initially */
+    border-radius: 2px;
+}
+
+/* --- Folder View Window --- */
+.folder-view-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); /* Grid like desktop */
+    gap: 5px;
+    align-content: flex-start; /* Align items to top */
+    padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    position: relative; /* For absolute positioned elements inside */
+}
+
+.folder-view-content .desktop-icon {
+    position: relative; /* Override absolute positioning from desktop */
+    left: auto !important;
+    top: auto !important;
+    margin: 5px; /* Add some margin for spacing in grid */
+     /* Ensure icons in folders don't interfere with desktop z-index */
+    z-index: 1 !important;
+}
+
+.folder-view-content .empty-folder-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-color-secondary);
+    font-size: 0.9em;
+    user-select: none;
+    pointer-events: none;
+}

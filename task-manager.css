@@ -1,0 +1,129 @@
+/* Task Manager specific styles */
+.task-manager-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.task-manager-content h3 {
+    margin-top: 0;
+    color: var(--text-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.task-list-container {
+    flex: 1;
+    overflow: auto;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+}
+
+.task-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.task-list th, .task-list td {
+    padding: 8px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.task-list th {
+    background-color: rgba(0, 0, 0, 0.02);
+    font-weight: 500;
+    font-size: 0.9em;
+    color: var(--text-color-secondary);
+}
+
+.task-list tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.status-badge.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.status-badge.running {
+    background-color: rgba(52, 199, 89, 0.2);
+    color: rgb(20, 120, 50);
+}
+
+.status-badge.suspended {
+    background-color: rgba(255, 149, 0, 0.2);
+    color: rgb(180, 80, 0);
+}
+
+.task-action {
+    padding: 3px 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.task-action:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.task-action.end-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.task-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.task-stats {
+    display: flex;
+    margin-bottom: 15px;
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: var(--text-color-secondary);
+}
+
+.stat-value {
+    font-family: monospace;
+}
+
+.task-manager-button {
+    align-self: flex-start;
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.task-manager-button:hover {
+    background-color: rgb(0, 100, 210);
+}
+
